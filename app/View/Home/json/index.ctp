@@ -3,8 +3,8 @@
  * JSON attributes.
  */
 	$json = array(
-		"status" => 200,
-		"message" => "The brazilian-shipping-api is installed with success. Enjoy! =)"
+		"status" => $status,
+		"message" => $message
 	);
 
 /**
