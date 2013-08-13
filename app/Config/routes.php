@@ -27,7 +27,7 @@
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
 	Router::connect('/', array('controller' => 'home', 'action' => 'index', 'ext' => 'json'));
-	Router::connect('/zipcodes/*', array('controller' => 'zipcodes', 'action' => 'index', 'ext' => 'json'));
+	Router::connect('/zipcode/*', array('controller' => 'zipcodes', 'action' => 'index', 'ext' => 'json'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

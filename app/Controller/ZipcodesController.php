@@ -12,27 +12,48 @@ class ZipcodesController extends AppController {
 		// Sanitize the zipcode
 		$zipcode = $this->Zipcode->sanitize($zipcode);
 
-		// HTTP Status by Default
-		$status = 200;
-
-		// Message by Default
-		$message = 'Success';
+		// Creates the JSON attributes to format
+		$json = array(
+			'status' => 200,
+			'message' => 'Success',
+			'zipcode' => $zipcode
+		);
 
 		// If the zipcode isn't on the format correct, error
 		if(strlen($zipcode) != 8) {
 			// HTTP Status
-			$status = 500;
+			$json['status'] = 500;
 
 			// Message
-			$message = 'The zipcode used is not in the format correct.';
+			$json['message'] = 'The zipcode used is not in the format correct.';
 		}
 
-		// Creates the JSON attributes to format
-		$json = array(
-			'status' => $status,
-			'message' => $message,
-			'zipcode' => $zipcode
-		);
+		// If the status is success
+		if($json['status'] == 200) {
+
+			// Get the Zipcode informations based on source
+			switch($source) {
+				case 'correiocontrol':
+					// Import de HttpSocket library
+					App::uses('HttpSocket', 'Network/Http');
+
+					// Generates an HttpSocket object
+					$HttpSocket = new HttpSocket();
+
+					// Executes the cURL requisition on correiocontrol.com.br
+					$response = $HttpSocket->get('http://cep.correiocontrol.com.br/' . $zipcode . '.json');
+
+					// Generates an JSON object from the response
+					$jsonResponse = json_decode($response);
+
+					// Manipulates the response
+					$json['address'] = $jsonResponse->logradouro;
+					$json['neighbourhood'] = $jsonResponse->bairro;
+					$json['state'] = $jsonResponse->uf;
+					$json['city'] = $jsonResponse->localidade;
+				break;
+			}
+		}
 
 		// Returns JSON format
 		echo json_encode($json);
