@@ -8,6 +8,8 @@ class ZipcodesController extends AppController {
  * Get some parameters and returns data about the zipcode used.
  */
 	public function index($zipcode = null, $source = 'correiocontrol') {
+		// No use view
+		$this->autoRender = false;
 
 		// Sanitize the zipcode
 		$zipcode = $this->Zipcode->sanitize($zipcode);
